@@ -1,6 +1,6 @@
-import { configureRouter, RouterConfig } from './router/index';
+import { configureRouter, RouterOptions, RoutesDefinition } from './router/index';
 
-const config = [
+const routes = [
   {
     path: '/dashboard',
     element: <Dashboard />,
@@ -17,9 +17,13 @@ const config = [
     path: '/',
     element: <Root />,
   },
-] as const satisfies RouterConfig;
+] as const satisfies RoutesDefinition;
 
-const { Router, Link, useParams } = configureRouter(config);
+const routerOptions: RouterOptions = {
+  notFoundElement: <div>👾 Route 404</div>,
+};
+
+const { Router, Link, useParams } = configureRouter(routes, routerOptions);
 
 function Dashboard() {
   return (

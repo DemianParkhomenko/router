@@ -1,5 +1,5 @@
 import { ReactNode, useCallback } from 'react';
-import { ExtractParams, RouterConfig } from './index';
+import { ExtractParams, RoutesDefinition } from './index';
 
 const generateHref = (to: string, params?: object) => {
   const pathSegments = to.split('/').filter(Boolean);
@@ -13,8 +13,8 @@ const generateHref = (to: string, params?: object) => {
   return `/${pathSegments.join('/')}`;
 };
 
-export const createLink = <Config extends RouterConfig>() => {
-  return function Link<T extends Config[number]['path'], P extends ExtractParams<T>>({
+export const createLink = <Routes extends RoutesDefinition>() => {
+  return function Link<T extends Routes[number]['path'], P extends ExtractParams<T>>({
     to,
     params,
     children,

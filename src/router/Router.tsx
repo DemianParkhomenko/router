@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { RouterConfig } from './index';
+import { RouterOptions, RoutesDefinition } from './index';
 import { RouterContext } from './contexts/RouterContext';
 
 const isCurrentPath = ({ path, currentPath }: { path: string; currentPath: string }) => {
@@ -28,7 +28,7 @@ const extractParams = ({ path, currentPath }: { path: string; currentPath: strin
   }, {});
 };
 
-export const createRouter = <Config extends RouterConfig>(config: Config) => {
+export const createRouter = <Routes extends RoutesDefinition>(routes: Routes, options: RouterOptions) => {
   return function Router() {
     const [params, setParams] = useState<Record<string, string>>({});
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -42,7 +42,7 @@ export const createRouter = <Config extends RouterConfig>(config: Config) => {
     }, []);
 
     const route = useMemo(() => {
-      return config.find(({ path }) => isCurrentPath({ path, currentPath }));
+      return routes.find(({ path }) => isCurrentPath({ path, currentPath }));
     }, [currentPath]);
 
     useEffect(() => {
@@ -53,7 +53,7 @@ export const createRouter = <Config extends RouterConfig>(config: Config) => {
 
     return (
       <RouterContext.Provider value={{ params }}>
-        {route ? route.element : <div>404 Not Found</div>}
+        {route ? route.element : options.notFoundElement || <div>404 Not Found</div>}
       </RouterContext.Provider>
     );
   };
