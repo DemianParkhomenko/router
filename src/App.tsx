@@ -23,7 +23,7 @@ const routerOptions: RouterOptions = {
   notFoundElement: <div>👾 Route 404</div>,
 };
 
-const { Router, Link, useParams } = configureRouter(routes, routerOptions);
+export const { Router, Link, useParams } = configureRouter(routes, routerOptions);
 
 function Dashboard() {
   return (

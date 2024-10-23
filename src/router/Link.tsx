@@ -7,7 +7,6 @@ const generateHref = (to: string, params?: object) => {
     const index = pathSegments.indexOf(`:${key}`);
     if (index !== -1) {
       if (typeof value !== 'string') {
-        console.error(`Expected a string value for param ${key}`);
         continue;
       }
       pathSegments[index] = value;
