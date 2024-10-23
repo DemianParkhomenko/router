@@ -1,21 +1,45 @@
 import { ReactNode } from 'react';
 
-export function Router({ config }: { config: { path: string; element: ReactNode }[] }) {
-  throw new Error('not implemented');
+type Config = readonly { path: string; element: ReactNode }[];
+
+export function Router({ config }: { config: Config }) {
+  console.log(config);
+  return <></>;
 }
 
-export function useParams() {
-  throw new Error('not implemented');
-}
+// export const createUseParams = ({ config }: { config: Config }) => {
+//   return () => {
+//     useParams();
+//   };
+// };
+
+// export function useParams() {
+//   throw new Error('not implemented');
+// }
+
+const config = [
+  {
+    path: '/dashboard',
+    element: <Dashboard />,
+  },
+  {
+    path: '/orders/:id',
+    element: <Order />,
+  },
+] as const;
+
+export const createLinkComponent = ({ config }: { config: Config }) => {};
 
 export function Link({
   to,
   params,
   children,
 }: {
-  to: string;
+  to: Pick<Config[number], 'path'>;
   params?: { [key: string]: string };
   children: ReactNode;
-}) {
-  throw new Error('not implemented');
+  }) {
+  
 }
+
+<Link to="" >
