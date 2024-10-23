@@ -19,7 +19,8 @@ The `useParams` hook is used to access route parameters. It returns an object co
 ## Usage Example
 
 > [!TIP]
-> See Demo application: https://github.com/DemianParkhomenko/router/blob/66b5558b9a61297bbd1201ca3f56b7e58ed34aea/src/App.tsx#L1-L94
+> See example: https://github.com/DemianParkhomenko/router/blob/6c22a366fdffa032ce066ac04e44828959b5ae6a/src/App.tsx#L89-L91
+
 ```ts
 const routes = [
   {
@@ -39,6 +40,10 @@ const routes = [
     element: <Root />,
   },
 ] as const satisfies RoutesDefinition;
+```
+
+```ts
+const { Router, Link, useParams } = configureRouter(routes, routerOptions);
 ```
 
 ```ts
