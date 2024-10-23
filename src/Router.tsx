@@ -1,45 +1,42 @@
-import { ReactNode } from 'react';
+import { ReactNode, createContext, useContext } from 'react';
 
-type Config = readonly { path: string; element: ReactNode }[];
+export type GenericConfig = readonly {
+  path: string;
+  element: JSX.Element;
+}[];
 
-export function Router({ config }: { config: Config }) {
-  console.log(config);
-  return <></>;
-}
+export type ExtractParam<Path, NextPart> = Path extends `:${infer Param}` ? Record<Param, string> & NextPart : NextPart;
 
-// export const createUseParams = ({ config }: { config: Config }) => {
-//   return () => {
-//     useParams();
-//   };
-// };
+export type ExtractParams<Path> = Path extends `${infer Segment}/${infer Rest}`
+  ? ExtractParam<Segment, ExtractParams<Rest>>
+  : ExtractParam<Path, {}>;
 
-// export function useParams() {
-//   throw new Error('not implemented');
-// }
+export function createRouter<Config extends GenericConfig>(config: Config) {
+  const RouterContext = createContext<{ params: Record<string, string> }>({ params: {} });
 
-const config = [
-  {
-    path: '/dashboard',
-    element: <Dashboard />,
-  },
-  {
-    path: '/orders/:id',
-    element: <Order />,
-  },
-] as const;
+  function Router() {
+    console.log(config);
+    return (
+      <RouterContext.Provider value={{ params: {} }}>{config.map(({ element }) => element)}</RouterContext.Provider>
+    );
+  }
 
-export const createLinkComponent = ({ config }: { config: Config }) => {};
+  function useParams<T extends Config[number]['path']>(currentPath: T): ExtractParams<T> {
+    const context = useContext(RouterContext);
+    return context.params as ExtractParams<T>;
+  }
 
-export function Link({
-  to,
-  params,
-  children,
-}: {
-  to: Pick<Config[number], 'path'>;
-  params?: { [key: string]: string };
-  children: ReactNode;
+  function Link<T extends Config[number]['path']>({
+    to,
+    params,
+    children,
+  }: {
+    to: T;
+    params?: ExtractParams<T>;
+    children: ReactNode;
   }) {
-  
-}
+    return <a href={to}>{children}</a>;
+  }
 
-<Link to="" >
+  return { Router, useParams, Link };
+}

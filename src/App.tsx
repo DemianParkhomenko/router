@@ -1,4 +1,17 @@
-import { ReactNode, useContext } from 'react';
+import { createRouter, GenericConfig } from './Router';
+
+const config = [
+  {
+    path: '/dashboard',
+    element: <Dashboard />,
+  },
+  {
+    path: '/orders/:id',
+    element: <Order />,
+  },
+] as const satisfies GenericConfig;
+
+const { Router, Link, useParams } = createRouter(config);
 
 function Dashboard() {
   return (
@@ -7,7 +20,7 @@ function Dashboard() {
       <ul>
         {[1, 2, 3].map((id) => (
           <li key={id}>
-            <Link to="/dashboard" params={{}}>
+            <Link to="/orders/:id" params={{ id: id.toString() }}>
               Order {id}
             </Link>
           </li>
@@ -26,66 +39,8 @@ function Order() {
   );
 }
 
-
-
-
-const config = [
-  {
-    path: '/dashboard',
-    element: <Dashboard />,
-  },
-  {
-    path: '/orders/:id',
-    element: <Order />,
-  },
-] as const;
-
-type Config = typeof config;
-
-
-export function useParams<T extends  Config[number]['path']>(
-  currentPath: T
-): ExtractParams<T> {
-  return {} as any;
-}
-
-
-export function Router({ config }: { config: Config }) {
-  console.log(config);
-
-  return <></>;
-}
-
-type ExtractParam<Path, NextPart> = Path extends `:${infer Param}` ? Record<Param, string> & NextPart : NextPart;
-
-type ExtractParams<Path> = Path extends `${infer Segment}/${infer Rest}`
-  ? ExtractParam<Segment, ExtractParams<Rest>>
-  : ExtractParam<Path, {}
-
-export function Link<T extends  Config[number]['path']>({
-  to,
-  params,
-  children,
-}: {
-  to:   T ;
-  params?: ExtractParams<T>;
-  children: ReactNode;
-}) {
-  return <div></div>;
-}
-
 function App() {
-  return <Router config={config} />;
+  return <Router />;
 }
 
 export default App;
-
-const MyComponent = () => {
-  return (
-    <div>
-      <Link to='/orders/:id' params={{id: 's'}}>
-        Dashboard
-      </Link>
-    </div>
-  );
-};
