@@ -1,4 +1,4 @@
-import { createRouter, GenericConfig } from './Router';
+import { configureRouter, RouterConfig } from './router/index';
 
 const config = [
   {
@@ -6,22 +6,30 @@ const config = [
     element: <Dashboard />,
   },
   {
-    path: '/orders/:id',
+    path: '/orders/:orderId',
     element: <Order />,
   },
-] as const satisfies GenericConfig;
+  {
+    path: '/orders/:orderId/products/:productId',
+    element: <Product />,
+  },
+  {
+    path: '/',
+    element: <Root />,
+  },
+] as const satisfies RouterConfig;
 
-const { Router, Link, useParams } = createRouter(config);
+const { Router, Link, useParams } = configureRouter(config);
 
 function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
       <ul>
-        {[1, 2, 3].map((id) => (
-          <li key={id}>
-            <Link to="/orders/:id" params={{ id: id.toString() }}>
-              Order {id}
+        {[1, 2, 3].map((orderId) => (
+          <li key={orderId}>
+            <Link to="/orders/:orderId" params={{ orderId: orderId.toString() }}>
+              Order {orderId}
             </Link>
           </li>
         ))}
@@ -31,10 +39,45 @@ function Dashboard() {
 }
 
 function Order() {
-  const { id } = useParams('/orders/:id');
+  const params = useParams('/orders/:orderId');
   return (
     <div>
-      <h1>Order {id}</h1>
+      <h1>Order {params.orderId}</h1>
+      {[1, 2, 3].map((productId) => (
+        <li key={productId}>
+          <Link
+            to="/orders/:orderId/products/:productId"
+            params={{ orderId: params.orderId, productId: productId.toString() }}
+          >
+            Product {productId}
+          </Link>
+        </li>
+      ))}
+    </div>
+  );
+}
+
+function Product() {
+  const params = useParams('/orders/:orderId/products/:productId');
+  return (
+    <div>
+      <h1>Product {params.productId} </h1>
+      <div>
+        Order {params.orderId} Product {params.productId}
+      </div>
+    </div>
+  );
+}
+
+function Root() {
+  return (
+    <div>
+      <h1>Root</h1>
+      <ul>
+        <li>
+          <Link to="/dashboard">Dashboard</Link>
+        </li>
+      </ul>
     </div>
   );
 }
