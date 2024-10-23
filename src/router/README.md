@@ -18,9 +18,9 @@ The `useParams` hook is used to access route parameters. It returns an object co
 
 ## Usage Example
 
-```javascript
-import { configureRouter } from './router/index';
-
+> [!TIP]
+> See Demo application: https://github.com/DemianParkhomenko/router/blob/66b5558b9a61297bbd1201ca3f56b7e58ed34aea/src/App.tsx#L1-L94
+```ts
 const routes = [
   {
     path: '/dashboard',
@@ -38,17 +38,15 @@ const routes = [
     path: '/',
     element: <Root />,
   },
-];
-
-const { Router, Link, useParams } = configureRouter(routes);
-
-function App() {
-  return <Router />;
-}
-
-export default App;
+] as const satisfies RoutesDefinition;
 ```
 
-- Use **`Router`** to render the defined routes.
-- Use **`Link`** to create navigational links.
-- Use **`useParams`** to access dynamic route parameters.
+```ts
+const params = useParams('/orders/:orderId');
+```
+
+```ts
+<Link to="/orders/:orderId" params={{ orderId: orderId.toString() }}>
+  Order {orderId}
+</Link>
+```
