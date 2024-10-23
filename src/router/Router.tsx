@@ -2,9 +2,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { RouterOptions, RoutesDefinition } from './index';
 import { RouterContext } from './contexts/RouterContext';
 
+const getSegments = (path: string) => path.split('/').filter(Boolean);
+
 const isCurrentPath = ({ path, currentPath }: { path: string; currentPath: string }) => {
-  const pathSegments = path.split('/').filter(Boolean);
-  const currentPathSegments = currentPath.split('/').filter(Boolean);
+  const pathSegments = getSegments(path);
+  const currentPathSegments = getSegments(currentPath);
   if (pathSegments.length !== currentPathSegments.length) {
     return false;
   }
